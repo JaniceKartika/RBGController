@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">RGB Controller</string>
+
+    <string name="max_move">Max move =</string>
+    <string name="half_move">Half move =</string>
+    <string name="auto">Auto</string>
+    <string name="r">R</string>
+    <string name="g">G</string>
+    <string name="b">B</string>
+    <string name="auto_1">1</string>
+    <string name="auto_2">2</string>
+    <string name="auto_3">3</string>
+    <string name="auto_4">4</string>
+    <string name="auto_5">5</string>
+    <string name="auto_6">6</string>
+    <string name="auto_7">7</string>
+    <string name="auto_8">8</string>
+    <string name="auto_9">9</string>
+</resources>
