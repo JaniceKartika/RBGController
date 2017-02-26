@@ -177,31 +177,31 @@ public class ControllerActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.bt_keypad_1:
-                sendData("1");
+                sendData("501");
                 break;
             case R.id.bt_keypad_2:
-                sendData("2");
+                sendData("502");
                 break;
             case R.id.bt_keypad_3:
-                sendData("3");
+                sendData("503");
                 break;
             case R.id.bt_keypad_4:
-                sendData("4");
+                sendData("504");
                 break;
             case R.id.bt_keypad_5:
-                sendData("5");
+                sendData("505");
                 break;
             case R.id.bt_keypad_6:
-                sendData("6");
+                sendData("506");
                 break;
             case R.id.bt_keypad_7:
-                sendData("7");
+                sendData("507");
                 break;
             case R.id.bt_keypad_8:
-                sendData("8");
+                sendData("508");
                 break;
             case R.id.bt_keypad_9:
-                sendData("9");
+                sendData("509");
                 break;
         }
     }
@@ -290,84 +290,88 @@ public class ControllerActivity extends AppCompatActivity implements View.OnClic
         sbRed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
+                int data = progress + 600;
+                sendData(String.valueOf(data));
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
+                // must-override method
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
+                // must-override method
             }
         });
 
         sbGreen.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
+                int data = progress + 700;
+                sendData(String.valueOf(data));
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
+                // must-override method
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
+                // must-override method
             }
         });
 
         sbBlue.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-
+                int data = progress + 800;
+                sendData(String.valueOf(data));
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
+                // must-override method
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
+                // must-override method
             }
         });
 
         btMode1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                sendData("401");
             }
         });
 
         btMode2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                sendData("402");
             }
         });
 
         btMode3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                sendData("403");
             }
         });
 
         avController.setOnMoveListener(new AnalogueView.OnMoveListener() {
             @Override
             public void onHalfMoveInDirection(double polarAngle) {
-
+                // must-override method
             }
 
             @Override
             public void onMaxMoveInDirection(double polarAngle) {
-
+                int angle = (int) (100 * polarAngle);
+                sendData(String.valueOf(angle));
             }
         });
     }
