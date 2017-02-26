@@ -2,11 +2,15 @@ package com.jkm.rgbcontroller;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGattCharacteristic;
+import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothManager;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -24,6 +28,7 @@ import android.widget.SeekBar;
 import android.widget.Toast;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class ControllerActivity extends AppCompatActivity {
     private static final String TAG = ControllerActivity.class.getSimpleName();
@@ -35,15 +40,18 @@ public class ControllerActivity extends AppCompatActivity {
     private AnalogueView avController;
 
     private BluetoothAdapter mBluetoothAdapter;
-    private String mDeviceAddress;
     private HashMap<String, String> mDevices = new HashMap<>();
+    private String mDeviceAddress;
+    private BluetoothGattCharacteristic characteristicTX;
+    private BluetoothGattCharacteristic characteristicRX;
 
     private ArrayAdapter<String> mArrayAdapter;
     private AlertDialog.Builder mDialogBuilder;
 
     private Handler mHandler = new Handler();
     private Runnable mRunnable;
-    private boolean mScanning = false;
+    private boolean isScanning = false;
+    private boolean isConnected = false;
 
     private DataService mDataService;
 
@@ -70,15 +78,29 @@ public class ControllerActivity extends AppCompatActivity {
         }
     };
 
+    private void GattServices(List<BluetoothGattService> gattServices) {
+        if (gattServices == null) return;
+        // Loops through available GATT Services.
+        for (BluetoothGattService gattService : gattServices) {
+            // get characteristic when UUID matches RX/TX UUID
+            characteristicTX = gattService.getCharacteristic(DataService.UUID_HM_RX_TX);
+            characteristicRX = gattService.getCharacteristic(DataService.UUID_HM_RX_TX);
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
-        if (mScanning) {
+        if (isScanning) {
             menu.findItem(R.id.action_scanning).setVisible(true).setActionView(R.layout.actionbar_indeterminate_progress);
             menu.findItem(R.id.action_connect).setVisible(false);
         } else {
             menu.findItem(R.id.action_scanning).setVisible(false);
-            menu.findItem(R.id.action_connect).setVisible(true);
+            if (isConnected) {
+                menu.findItem(R.id.action_connect).setVisible(true).setTitle(getResources().getString(R.string.disconnect));
+            } else {
+                menu.findItem(R.id.action_connect).setVisible(true).setTitle(getResources().getString(R.string.connect));
+            }
         }
         return super.onCreateOptionsMenu(menu);
     }
@@ -87,14 +109,18 @@ public class ControllerActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_connect) {
-            if (!mBluetoothAdapter.isEnabled()) {
-                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(enableBtIntent, 1);
+            if (isConnected) {
+                mDataService.disconnect();
             } else {
-                mDevices.clear();
-                mArrayAdapter.clear();
-                scanLeDevice(true);
-                mDialogBuilder.show();
+                if (!mBluetoothAdapter.isEnabled()) {
+                    Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                    startActivityForResult(enableBtIntent, 1);
+                } else {
+                    mDevices.clear();
+                    mArrayAdapter.clear();
+                    scanLeDevice(true);
+                    mDialogBuilder.show();
+                }
             }
         } else if (id == R.id.action_scanning) {
             // Wait until BLE is found
@@ -108,16 +134,16 @@ public class ControllerActivity extends AppCompatActivity {
             mRunnable = new Runnable() {
                 @Override
                 public void run() {
-                    mScanning = false;
+                    isScanning = false;
                     mBluetoothAdapter.stopLeScan(mLeScanCallback);
                     invalidateOptionsMenu();
                 }
             };
             mHandler.postDelayed(mRunnable, SCAN_PERIOD);
-            mScanning = true;
+            isScanning = true;
             mBluetoothAdapter.startLeScan(mLeScanCallback);
         } else {
-            mScanning = false;
+            isScanning = false;
             mBluetoothAdapter.stopLeScan(mLeScanCallback);
         }
         invalidateOptionsMenu();
@@ -195,6 +221,9 @@ public class ControllerActivity extends AppCompatActivity {
                 if (mDevices.containsKey(deviceName)) {
                     mDeviceAddress = mDevices.get(deviceName);
                     Log.d(TAG, "Address = " + mDeviceAddress);
+
+                    Intent gattServiceIntent = new Intent(ControllerActivity.this, DataService.class);
+                    bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
                 }
             }
         });
@@ -347,15 +376,55 @@ public class ControllerActivity extends AppCompatActivity {
         });
     }
 
+    /*
+       Handles various events fired by the Service.
+       ACTION_GATT_CONNECTED: connected to a GATT server.
+       ACTION_GATT_DISCONNECTED: disconnected from a GATT server.
+       ACTION_GATT_SERVICES_DISCOVERED: discovered GATT services.
+       ACTION_DATA_AVAILABLE: received data from the device.  This can be a result of read or notification operations.
+    */
+    private final BroadcastReceiver mServiceBroadcast = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            final String action = intent.getAction();
+            if (DataService.ACTION_GATT_CONNECTED.equals(action)) {
+                isConnected = true;
+                invalidateOptionsMenu();
+                Log.d(TAG, "Connected");
+            } else if (DataService.ACTION_GATT_DISCONNECTED.equals(action)) {
+                isConnected = false;
+                invalidateOptionsMenu();
+                Log.d(TAG, "Disconnected");
+            } else if (DataService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
+                GattServices(mDataService.getSupportedGattServices());
+            } else if (DataService.ACTION_DATA_AVAILABLE.equals(action)) {
+                Log.i(TAG, "Data from device: " + DataService.EXTRA_DATA);
+            }
+        }
+    };
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        IntentFilter filter = new IntentFilter(DataService.ACTION_GATT_CONNECTED);
+        filter.addAction(DataService.ACTION_GATT_DISCONNECTED);
+        filter.addAction(DataService.ACTION_GATT_SERVICES_DISCOVERED);
+        filter.addAction(DataService.ACTION_DATA_AVAILABLE);
+        registerReceiver(mServiceBroadcast, filter);
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
         scanLeDevice(false);
+        unregisterReceiver(mServiceBroadcast);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (isConnected) mDataService.disconnect();
+        unbindService(mServiceConnection);
         mDataService = null;
     }
 }
