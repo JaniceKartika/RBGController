@@ -1,9 +1,13 @@
 <resources>
     <string name="app_name">RGB Controller</string>
 
-    <string name="max_move">Max move =</string>
-    <string name="half_move">Half move =</string>
-    <string name="auto">Auto</string>
+    <string name="scanning">Scanning</string>
+    <string name="connect">Connect</string>
+    <string name="disconnect">Disconnect</string>
+
+    <string name="ble_not_supported">BLE is not supported</string>
+    <string name="bluetooth_not_supported">Fatal error: Bluetooth is not supported</string>
+
     <string name="r">R</string>
     <string name="g">G</string>
     <string name="b">B</string>
@@ -16,4 +20,7 @@
     <string name="auto_7">7</string>
     <string name="auto_8">8</string>
     <string name="auto_9">9</string>
+    <string name="mode_1">Mode 1</string>
+    <string name="mode_2">Mode 2</string>
+    <string name="mode_3">Mode 3</string>
 </resources>
