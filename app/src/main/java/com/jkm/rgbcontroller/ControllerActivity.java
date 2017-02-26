@@ -30,7 +30,7 @@ import android.widget.Toast;
 import java.util.HashMap;
 import java.util.List;
 
-public class ControllerActivity extends AppCompatActivity {
+public class ControllerActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = ControllerActivity.class.getSimpleName();
     private static final long SCAN_PERIOD = 10000;
 
@@ -52,6 +52,7 @@ public class ControllerActivity extends AppCompatActivity {
     private Runnable mRunnable;
     private boolean isScanning = false;
     private boolean isConnected = false;
+    private boolean isServiceBind = false;
 
     private DataService mDataService;
 
@@ -162,6 +163,49 @@ public class ControllerActivity extends AppCompatActivity {
         }
     };
 
+    private void sendData(String data) {
+        data += "\n";
+        byte[] tx = data.getBytes();
+        if (isConnected) {
+            characteristicTX.setValue(tx);
+            mDataService.writeCharacteristic(characteristicTX);
+            mDataService.setCharacteristicNotification(characteristicRX, true);
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.bt_keypad_1:
+                sendData("1");
+                break;
+            case R.id.bt_keypad_2:
+                sendData("2");
+                break;
+            case R.id.bt_keypad_3:
+                sendData("3");
+                break;
+            case R.id.bt_keypad_4:
+                sendData("4");
+                break;
+            case R.id.bt_keypad_5:
+                sendData("5");
+                break;
+            case R.id.bt_keypad_6:
+                sendData("6");
+                break;
+            case R.id.bt_keypad_7:
+                sendData("7");
+                break;
+            case R.id.bt_keypad_8:
+                sendData("8");
+                break;
+            case R.id.bt_keypad_9:
+                sendData("9");
+                break;
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -197,6 +241,16 @@ public class ControllerActivity extends AppCompatActivity {
         btKeypad8 = (Button) findViewById(R.id.bt_keypad_8);
         btKeypad9 = (Button) findViewById(R.id.bt_keypad_9);
 
+        btKeypad1.setOnClickListener(this);
+        btKeypad2.setOnClickListener(this);
+        btKeypad3.setOnClickListener(this);
+        btKeypad4.setOnClickListener(this);
+        btKeypad5.setOnClickListener(this);
+        btKeypad6.setOnClickListener(this);
+        btKeypad7.setOnClickListener(this);
+        btKeypad8.setOnClickListener(this);
+        btKeypad9.setOnClickListener(this);
+
         avController = (AnalogueView) findViewById(R.id.av_controller);
 
         mArrayAdapter = new ArrayAdapter<>(ControllerActivity.this, android.R.layout.select_dialog_item);
@@ -222,8 +276,13 @@ public class ControllerActivity extends AppCompatActivity {
                     mDeviceAddress = mDevices.get(deviceName);
                     Log.d(TAG, "Address = " + mDeviceAddress);
 
-                    Intent gattServiceIntent = new Intent(ControllerActivity.this, DataService.class);
-                    bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+                    if (!isServiceBind) {
+                        Intent gattServiceIntent = new Intent(ControllerActivity.this, DataService.class);
+                        bindService(gattServiceIntent, mServiceConnection, BIND_AUTO_CREATE);
+                        isServiceBind = true;
+                    } else {
+                        if (mDataService != null) mDataService.connect(mDeviceAddress);
+                    }
                 }
             }
         });
@@ -300,69 +359,6 @@ public class ControllerActivity extends AppCompatActivity {
             }
         });
 
-        btKeypad1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        btKeypad2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        btKeypad3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        btKeypad4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        btKeypad5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        btKeypad6.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        btKeypad7.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        btKeypad8.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
-        btKeypad9.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-
         avController.setOnMoveListener(new AnalogueView.OnMoveListener() {
             @Override
             public void onHalfMoveInDirection(double polarAngle) {
@@ -398,7 +394,7 @@ public class ControllerActivity extends AppCompatActivity {
             } else if (DataService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
                 GattServices(mDataService.getSupportedGattServices());
             } else if (DataService.ACTION_DATA_AVAILABLE.equals(action)) {
-                Log.i(TAG, "Data from device: " + DataService.EXTRA_DATA);
+                // In case need to receive data
             }
         }
     };
@@ -424,7 +420,10 @@ public class ControllerActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         if (isConnected) mDataService.disconnect();
-        unbindService(mServiceConnection);
+        if (isServiceBind) {
+            unbindService(mServiceConnection);
+            isServiceBind = false;
+        }
         mDataService = null;
     }
 }
