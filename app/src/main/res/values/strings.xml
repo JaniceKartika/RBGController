@@ -7,6 +7,9 @@
 
     <string name="ble_not_supported">BLE is not supported</string>
     <string name="bluetooth_not_supported">Fatal error: Bluetooth is not supported</string>
+    <string name="permission_title">Permission Needed</string>
+    <string name="permission_body">Location access is required to get scan results.</string>
+    <string name="permission_not_granted">Permission is not granted. Unable to scan devices.</string>
 
     <string name="r">R</string>
     <string name="g">G</string>

@@ -1,5 +1,6 @@
 package com.jkm.rgbcontroller;
 
+import android.Manifest;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGattCharacteristic;
@@ -16,6 +17,9 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -110,12 +114,57 @@ public class ControllerActivity extends AppCompatActivity implements View.OnClic
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_connect) {
-            if (isConnected) {
-                mDataService.disconnect();
+            prepareToScanLeDevice();
+        } else if (id == R.id.action_scanning) {
+            // Wait until BLE is found
+            Log.d(TAG, "scanning...");
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == 1) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                prepareToScanLeDevice();
             } else {
-                if (!mBluetoothAdapter.isEnabled()) {
-                    Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                    startActivityForResult(enableBtIntent, 1);
+                Toast.makeText(ControllerActivity.this, getResources().getString(R.string.permission_not_granted),
+                        Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    private void requestAccessLocationPermission(final int requestCode, int titleAlert, int bodyAlert) {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(ControllerActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION)) {
+            new AlertDialog.Builder(ControllerActivity.this)
+                    .setTitle(getResources().getString(titleAlert))
+                    .setMessage(getResources().getString(bodyAlert))
+                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            ActivityCompat.requestPermissions(ControllerActivity.this,
+                                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, requestCode);
+                            dialog.dismiss();
+                        }
+                    })
+                    .setIcon(R.drawable.ic_alert).show();
+        } else {
+            ActivityCompat.requestPermissions(ControllerActivity.this,
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, requestCode);
+        }
+    }
+
+    private void prepareToScanLeDevice() {
+        if (isConnected) {
+            mDataService.disconnect();
+        } else {
+            if (!mBluetoothAdapter.isEnabled()) {
+                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(enableBtIntent, 1);
+            } else {
+                if (ContextCompat.checkSelfPermission(ControllerActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    requestAccessLocationPermission(1, R.string.permission_title, R.string.permission_body);
                 } else {
                     mDevices.clear();
                     mArrayAdapter.clear();
@@ -123,11 +172,7 @@ public class ControllerActivity extends AppCompatActivity implements View.OnClic
                     mDialogBuilder.show();
                 }
             }
-        } else if (id == R.id.action_scanning) {
-            // Wait until BLE is found
-            Log.d(TAG, "scanning...");
         }
-        return super.onOptionsItemSelected(item);
     }
 
     private void scanLeDevice(boolean enable) {
