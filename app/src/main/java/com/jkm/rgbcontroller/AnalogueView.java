@@ -9,6 +9,8 @@ import android.view.MotionEvent;
 import android.view.View;
 
 public class AnalogueView extends View {
+    private static final int MAX_VALUE = 180;
+
     private OnMoveListener mMoveListener;
 
     private Paint black = new Paint();
@@ -129,8 +131,9 @@ public class AnalogueView extends View {
         x = (float) p2nX(r, t);
         y = (float) p2nY(r, t);
 
-        float X = x - (3 * smallCircleRadius);
-        float Y = -1 * (y - (3 * smallCircleRadius));
+        int range = w - 2 * smallCircleRadius;
+        float X = (MAX_VALUE * (x - smallCircleRadius)) / range;
+        float Y = (MAX_VALUE * (smallCircleRadius - y + range)) / range;
 
         if (mMoveListener != null) {
             mMoveListener.onAnalogueMove(X, Y);
