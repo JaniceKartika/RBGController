@@ -212,11 +212,11 @@ public class ControllerActivity extends AppCompatActivity implements View.OnClic
         data += "\n";
         byte[] tx = data.getBytes();
 
-        String temp = "";
+        /*String temp = "";
         for (byte value : tx) {
             temp += (char) value;
         }
-        Log.d(TAG, temp);
+        Log.d(TAG, temp);*/
 
         if (isConnected) {
             characteristicTX.setValue(tx);
@@ -416,15 +416,15 @@ public class ControllerActivity extends AppCompatActivity implements View.OnClic
 
         avController.setOnMoveListener(new AnalogueView.OnMoveListener() {
             @Override
-            public void onHalfMoveInDirection(double polarAngle) {
+            public void onCenter() {
                 // must-override method
             }
 
             @Override
-            public void onMaxMoveInDirection(double polarAngle) {
-                int angle = (int) ((255 * (100 * polarAngle)) / 314);
+            public void onAnalogueMove(float X, float Y) {
+                /* int angle = (int) ((255 * (100 * polarAngle)) / 314);
                 angle *= -1;
-                sendData(String.valueOf(angle));
+                sendData(String.valueOf(angle)); */
             }
         });
     }

@@ -9,9 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 public class AnalogueView extends View {
-    private static final int RADIUS = 20;
-
-    private OnMoveListener moveListener;
+    private OnMoveListener mMoveListener;
 
     private Paint black = new Paint();
     private Paint grey = new Paint();
@@ -19,7 +17,8 @@ public class AnalogueView extends View {
 
     private float x, y;
     private double r, t;
-    private int cx, cy, w, h;
+    private int cx, cy, w;
+    private int smallCircleRadius = 0;
 
     private int toDo;
 
@@ -36,11 +35,11 @@ public class AnalogueView extends View {
     @Override
     protected void onSizeChanged(int w, int h, int dw, int dh) {
         this.w = w;
-        this.h = h;
         cx = w / 2;
         cy = h / 2;
         x = cx;
         y = cy;
+        smallCircleRadius = w / 6;
         super.onSizeChanged(w, h, dw, dh);
     }
 
@@ -61,8 +60,8 @@ public class AnalogueView extends View {
         canvas.drawCircle(cx, cy, w / 2, black);
         canvas.drawCircle(cx, cy, w / 2 - 5, grey);
         canvas.drawCircle(cx, cy, w / 2 - 10, black);
-        canvas.drawCircle(x, y, RADIUS + 2, white);
-        canvas.drawCircle(x, y, RADIUS, grey);
+        canvas.drawCircle(x, y, smallCircleRadius + 2, white);
+        canvas.drawCircle(x, y, smallCircleRadius, grey);
     }
 
     // n2p  : normal to polar coordinates conversion
@@ -85,22 +84,6 @@ public class AnalogueView extends View {
         return r * Math.sin(t) + cy;
     }
 
-    double n2pR() {
-        return distance(x, y, cx, cy);
-    }
-
-    double n2pT() {
-        return Math.atan2((y - cy), (x - cx));
-    }
-
-    double p2nX() {
-        return r * Math.cos(t) + cx;
-    }
-
-    double p2nY() {
-        return r * Math.sin(t) + cy;
-    }
-
     double distance(double x1, double y1, double x2, double y2) {
         return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
     }
@@ -111,14 +94,12 @@ public class AnalogueView extends View {
             case MotionEvent.ACTION_DOWN:
                 updatePosition(event);
                 break;
-
             case MotionEvent.ACTION_MOVE:
                 updatePosition(event);
                 break;
-
             case MotionEvent.ACTION_UP:
                 toDo = 1;
-                center();
+                invalidate();
                 break;
             default:
                 break;
@@ -133,35 +114,37 @@ public class AnalogueView extends View {
             toDo = 0;
             r = 0;
         }
-        x = (float) p2nX();
-        y = (float) p2nY();
+        x = (float) p2nX(r, t);
+        y = (float) p2nY(r, t);
+
+        if (mMoveListener != null) {
+            mMoveListener.onCenter();
+        }
         invalidate();
     }
 
     void updatePosition(MotionEvent e) {
-        r = Math.min(w / 2 - RADIUS, n2pR(e.getX(), e.getY()));
+        r = Math.min(w / 2 - smallCircleRadius, n2pR(e.getX(), e.getY()));
         t = n2pT(e.getX(), e.getY());
-        x = (float) p2nX();
-        y = (float) p2nY();
+        x = (float) p2nX(r, t);
+        y = (float) p2nY(r, t);
 
-        if (moveListener != null) {
-            if (r == w / 2 - RADIUS) {
-                moveListener.onMaxMoveInDirection(t);
-            } else if (r >= w / 4 - RADIUS / 2) {
-                moveListener.onHalfMoveInDirection(t);
-            }
+        float X = x - (3 * smallCircleRadius);
+        float Y = -1 * (y - (3 * smallCircleRadius));
+
+        if (mMoveListener != null) {
+            mMoveListener.onAnalogueMove(X, Y);
         }
-
         invalidate();
     }
 
     public void setOnMoveListener(OnMoveListener listener) {
-        moveListener = listener;
+        mMoveListener = listener;
     }
 
-    public interface OnMoveListener {
-        void onHalfMoveInDirection(double polarAngle);
+    interface OnMoveListener {
+        void onCenter();
 
-        void onMaxMoveInDirection(double polarAngle);
+        void onAnalogueMove(float X, float Y);
     }
 }
