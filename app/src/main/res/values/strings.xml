@@ -26,4 +26,7 @@
     <string name="led_1">Led 1</string>
     <string name="led_2">Led 2</string>
     <string name="led_3">Led 3</string>
+    <string name="dimmer_1">Dimmer 1</string>
+    <string name="dimmer_2">Dimmer 2</string>
+    <string name="dimmer_3">Dimmer 3</string>
 </resources>

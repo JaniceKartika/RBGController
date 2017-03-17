@@ -44,6 +44,7 @@ public class ControllerActivity extends AppCompatActivity implements View.OnClic
 
     private SeekBar sbRed, sbGreen, sbBlue;
     private Button btLed1, btLed2, btLed3;
+    private Button btDimmer1, btDimmer2, btDimmer3;
     private Button btKeypad1, btKeypad2, btKeypad3, btKeypad4, btKeypad5, btKeypad6, btKeypad7, btKeypad8, btKeypad9;
     private AnalogueView avController;
     private TextView tvData;
@@ -60,6 +61,7 @@ public class ControllerActivity extends AppCompatActivity implements View.OnClic
     private String x = "000", y = "000";
     private String r = "000", g = "000", b = "000";
     private char[] mode = {'0', '0', '0'};
+    private char dimmer = '0';
     private boolean[] isManual = {false, false, false};
     private boolean[] isTouchDown = {false, false, false};
     private boolean isKeypadPressed = false;
@@ -223,7 +225,7 @@ public class ControllerActivity extends AppCompatActivity implements View.OnClic
     private void updatePacketData() {
         String showData = "LED 1 = " + mode[0] + ", LED 2 = " + mode[1] + ", LED 3 = " + mode[2];
         tvData.setText(showData);
-        String packet = START_BIT + x + y + r + g + b + mode[0] + mode[1] + mode[2] + STOP_BIT;
+        String packet = START_BIT + x + y + r + g + b + mode[0] + mode[1] + mode[2] + dimmer + STOP_BIT;
         sendData(packet);
     }
 
@@ -262,6 +264,12 @@ public class ControllerActivity extends AppCompatActivity implements View.OnClic
         btLed1.setPressed(isManual[0]);
         btLed2.setPressed(isManual[1]);
         btLed3.setPressed(isManual[2]);
+    }
+
+    private void refreshDimmerButtons() {
+        btDimmer1.setPressed(dimmer == '1');
+        btDimmer2.setPressed(dimmer == '2');
+        btDimmer3.setPressed(dimmer == '3');
     }
 
     private int touchDownIndex() {
@@ -305,6 +313,10 @@ public class ControllerActivity extends AppCompatActivity implements View.OnClic
         btLed1 = (Button) findViewById(R.id.bt_led_1);
         btLed2 = (Button) findViewById(R.id.bt_led_2);
         btLed3 = (Button) findViewById(R.id.bt_led_3);
+
+        btDimmer1 = (Button) findViewById(R.id.bt_dimmer_1);
+        btDimmer2 = (Button) findViewById(R.id.bt_dimmer_2);
+        btDimmer3 = (Button) findViewById(R.id.bt_dimmer_3);
 
         btKeypad1 = (Button) findViewById(R.id.bt_keypad_1);
         btKeypad2 = (Button) findViewById(R.id.bt_keypad_2);
@@ -423,7 +435,7 @@ public class ControllerActivity extends AppCompatActivity implements View.OnClic
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    v.setBackgroundResource(R.drawable.selector_button_led);
+                    v.setBackgroundResource(R.drawable.selector_button);
                     refreshManualSignAndData();
                     isTouchDown[0] = false;
                 } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -438,7 +450,7 @@ public class ControllerActivity extends AppCompatActivity implements View.OnClic
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    v.setBackgroundResource(R.drawable.selector_button_led);
+                    v.setBackgroundResource(R.drawable.selector_button);
                     refreshManualSignAndData();
                     isTouchDown[1] = false;
                 } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -453,12 +465,57 @@ public class ControllerActivity extends AppCompatActivity implements View.OnClic
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP) {
-                    v.setBackgroundResource(R.drawable.selector_button_led);
+                    v.setBackgroundResource(R.drawable.selector_button);
                     refreshManualSignAndData();
                     isTouchDown[2] = false;
                 } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     v.setBackgroundResource(android.R.color.background_light);
                     isTouchDown[2] = true;
+                }
+                return true;
+            }
+        });
+
+        btDimmer1.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    v.setBackgroundResource(R.drawable.selector_button);
+                    dimmer = '1';
+                    refreshDimmerButtons();
+                    updatePacketData();
+                } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    v.setBackgroundResource(android.R.color.background_light);
+                }
+                return true;
+            }
+        });
+
+        btDimmer2.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    v.setBackgroundResource(R.drawable.selector_button);
+                    dimmer = '2';
+                    refreshDimmerButtons();
+                    updatePacketData();
+                } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    v.setBackgroundResource(android.R.color.background_light);
+                }
+                return true;
+            }
+        });
+
+        btDimmer3.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    v.setBackgroundResource(R.drawable.selector_button);
+                    dimmer = '3';
+                    refreshDimmerButtons();
+                    updatePacketData();
+                } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    v.setBackgroundResource(android.R.color.background_light);
                 }
                 return true;
             }
