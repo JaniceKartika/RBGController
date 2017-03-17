@@ -30,6 +30,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.HashMap;
@@ -45,6 +46,7 @@ public class ControllerActivity extends AppCompatActivity implements View.OnClic
     private Button btLed1, btLed2, btLed3;
     private Button btKeypad1, btKeypad2, btKeypad3, btKeypad4, btKeypad5, btKeypad6, btKeypad7, btKeypad8, btKeypad9;
     private AnalogueView avController;
+    private TextView tvData;
 
     private BluetoothAdapter mBluetoothAdapter;
     private HashMap<String, String> mDevices = new HashMap<>();
@@ -219,6 +221,8 @@ public class ControllerActivity extends AppCompatActivity implements View.OnClic
     };
 
     private void updatePacketData() {
+        String showData = "LED 1 = " + mode[0] + ", LED 2 = " + mode[1] + ", LED 3 = " + mode[2];
+        tvData.setText(showData);
         String packet = START_BIT + x + y + r + g + b + mode[0] + mode[1] + mode[2] + STOP_BIT;
         sendData(packet);
     }
@@ -323,6 +327,7 @@ public class ControllerActivity extends AppCompatActivity implements View.OnClic
         btKeypad9.setOnClickListener(this);
 
         avController = (AnalogueView) findViewById(R.id.av_controller);
+        tvData = (TextView) findViewById(R.id.tv_data);
 
         updatePacketData();
 

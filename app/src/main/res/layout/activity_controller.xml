@@ -257,5 +257,14 @@
                 android:text="@string/auto_9"
                 android:textSize="@dimen/font_large" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:padding="8dp"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/font_normal" />
     </LinearLayout>
 </LinearLayout>
