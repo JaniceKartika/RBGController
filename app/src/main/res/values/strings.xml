@@ -23,7 +23,7 @@
     <string name="auto_7">7</string>
     <string name="auto_8">8</string>
     <string name="auto_9">9</string>
-    <string name="mode_1">Mode 1</string>
-    <string name="mode_2">Mode 2</string>
-    <string name="mode_3">Mode 3</string>
+    <string name="led_1">Led 1</string>
+    <string name="led_2">Led 2</string>
+    <string name="led_3">Led 3</string>
 </resources>

@@ -41,7 +41,7 @@
                     android:id="@+id/sb_red"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:max="99"
+                    android:max="255"
                     android:progressTint="@color/softRedMaterial"
                     android:thumbTint="@color/redMaterial" />
             </LinearLayout>
@@ -63,7 +63,7 @@
                     android:id="@+id/sb_green"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:max="99"
+                    android:max="255"
                     android:progressTint="@color/softGreenMaterial"
                     android:thumbTint="@color/greenMaterial" />
             </LinearLayout>
@@ -84,7 +84,7 @@
                     android:id="@+id/sb_blue"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:max="99"
+                    android:max="255"
                     android:progressTint="@color/softBlueMaterial"
                     android:thumbTint="@color/blueMaterial" />
             </LinearLayout>
@@ -111,28 +111,34 @@
                 android:orientation="vertical">
 
                 <Button
-                    android:id="@+id/bt_mode_1"
-                    style="?android:attr/buttonBarButtonStyle"
+                    android:id="@+id/bt_led_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
                     android:layout_weight="1"
-                    android:text="@string/mode_1" />
+                    android:background="@drawable/selector_button_led"
+                    android:text="@string/led_1"
+                    android:textColor="@color/colorAccent" />
 
                 <Button
-                    android:id="@+id/bt_mode_2"
-                    style="?android:attr/buttonBarButtonStyle"
+                    android:id="@+id/bt_led_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
                     android:layout_weight="1"
-                    android:text="@string/mode_2" />
+                    android:background="@drawable/selector_button_led"
+                    android:text="@string/led_2"
+                    android:textColor="@color/colorAccent" />
 
                 <Button
-                    android:id="@+id/bt_mode_3"
-                    style="?android:attr/buttonBarButtonStyle"
+                    android:id="@+id/bt_led_3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
                     android:layout_weight="1"
-                    android:text="@string/mode_3" />
+                    android:background="@drawable/selector_button_led"
+                    android:text="@string/led_3"
+                    android:textColor="@color/colorAccent" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
@@ -157,6 +163,7 @@
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:tag="1"
                 android:text="@string/auto_1"
                 android:textSize="@dimen/font_large" />
 
@@ -165,6 +172,7 @@
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:tag="2"
                 android:text="@string/auto_2"
                 android:textSize="@dimen/font_large" />
 
@@ -173,6 +181,7 @@
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:tag="3"
                 android:text="@string/auto_3"
                 android:textSize="@dimen/font_large" />
         </LinearLayout>
@@ -190,6 +199,7 @@
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:tag="4"
                 android:text="@string/auto_4"
                 android:textSize="@dimen/font_large" />
 
@@ -198,6 +208,7 @@
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:tag="5"
                 android:text="@string/auto_5"
                 android:textSize="@dimen/font_large" />
 
@@ -206,6 +217,7 @@
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:tag="6"
                 android:text="@string/auto_6"
                 android:textSize="@dimen/font_large" />
         </LinearLayout>
@@ -223,6 +235,7 @@
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:tag="7"
                 android:text="@string/auto_7"
                 android:textSize="@dimen/font_large" />
 
@@ -231,6 +244,7 @@
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:tag="8"
                 android:text="@string/auto_8"
                 android:textSize="@dimen/font_large" />
 
@@ -239,6 +253,7 @@
                 style="?android:attr/buttonBarButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:tag="9"
                 android:text="@string/auto_9"
                 android:textSize="@dimen/font_large" />
         </LinearLayout>

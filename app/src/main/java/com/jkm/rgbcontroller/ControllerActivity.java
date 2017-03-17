@@ -25,6 +25,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -37,9 +38,11 @@ import java.util.List;
 public class ControllerActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = ControllerActivity.class.getSimpleName();
     private static final long SCAN_PERIOD = 10000;
+    private static final char START_BIT = '#';
+    private static final char STOP_BIT = '@';
 
     private SeekBar sbRed, sbGreen, sbBlue;
-    private Button btMode1, btMode2, btMode3;
+    private Button btLed1, btLed2, btLed3;
     private Button btKeypad1, btKeypad2, btKeypad3, btKeypad4, btKeypad5, btKeypad6, btKeypad7, btKeypad8, btKeypad9;
     private AnalogueView avController;
 
@@ -51,6 +54,13 @@ public class ControllerActivity extends AppCompatActivity implements View.OnClic
 
     private ArrayAdapter<String> mArrayAdapter;
     private AlertDialog.Builder mDialogBuilder;
+
+    private String x = "000", y = "000";
+    private String r = "000", g = "000", b = "000";
+    private char[] mode = {'0', '0', '0'};
+    private boolean[] isManual = {false, false, false};
+    private boolean[] isTouchDown = {false, false, false};
+    private boolean isKeypadPressed = false;
 
     private Handler mHandler = new Handler();
     private Runnable mRunnable;
@@ -208,15 +218,14 @@ public class ControllerActivity extends AppCompatActivity implements View.OnClic
         }
     };
 
-    private void sendData(String data) {
-        data += "\n";
-        byte[] tx = data.getBytes();
+    private void updatePacketData() {
+        String packet = START_BIT + x + y + r + g + b + mode[0] + mode[1] + mode[2] + STOP_BIT;
+        sendData(packet);
+    }
 
-        /*String temp = "";
-        for (byte value : tx) {
-            temp += (char) value;
-        }
-        Log.d(TAG, temp);*/
+    private void sendData(String data) {
+        byte[] tx = data.getBytes();
+        Log.d(TAG, data);
 
         if (isConnected) {
             characteristicTX.setValue(tx);
@@ -225,36 +234,46 @@ public class ControllerActivity extends AppCompatActivity implements View.OnClic
         }
     }
 
+    private void clearManualFlag() {
+        isManual[0] = false;
+        isManual[1] = false;
+        isManual[2] = false;
+    }
+
+    private void refreshManualSignAndData() {
+        if (isKeypadPressed) {
+            isManual[touchDownIndex()] = false;
+        } else {
+            int manualIndex = touchDownIndex();
+            clearManualFlag();
+            isManual[manualIndex] = true;
+            for (int i = 0; i < mode.length; i++) {
+                if (mode[i] == 'm') mode[i] = '0';
+            }
+            mode[manualIndex] = 'm';
+            updatePacketData();
+        }
+
+        isKeypadPressed = false;
+        btLed1.setPressed(isManual[0]);
+        btLed2.setPressed(isManual[1]);
+        btLed3.setPressed(isManual[2]);
+    }
+
+    private int touchDownIndex() {
+        if (isTouchDown[0]) return 0;
+        else if (isTouchDown[1]) return 1;
+        else if (isTouchDown[2]) return 2;
+        else return -1;
+    }
+
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.bt_keypad_1:
-                sendData("501");
-                break;
-            case R.id.bt_keypad_2:
-                sendData("502");
-                break;
-            case R.id.bt_keypad_3:
-                sendData("503");
-                break;
-            case R.id.bt_keypad_4:
-                sendData("504");
-                break;
-            case R.id.bt_keypad_5:
-                sendData("505");
-                break;
-            case R.id.bt_keypad_6:
-                sendData("506");
-                break;
-            case R.id.bt_keypad_7:
-                sendData("507");
-                break;
-            case R.id.bt_keypad_8:
-                sendData("508");
-                break;
-            case R.id.bt_keypad_9:
-                sendData("509");
-                break;
+        int index = touchDownIndex();
+        if (index != -1) {
+            isKeypadPressed = true;
+            mode[index] = (char) (Integer.parseInt(String.valueOf(v.getTag())) + 48);
+            updatePacketData();
         }
     }
 
@@ -279,9 +298,9 @@ public class ControllerActivity extends AppCompatActivity implements View.OnClic
         sbGreen = (SeekBar) findViewById(R.id.sb_green);
         sbBlue = (SeekBar) findViewById(R.id.sb_blue);
 
-        btMode1 = (Button) findViewById(R.id.bt_mode_1);
-        btMode2 = (Button) findViewById(R.id.bt_mode_2);
-        btMode3 = (Button) findViewById(R.id.bt_mode_3);
+        btLed1 = (Button) findViewById(R.id.bt_led_1);
+        btLed2 = (Button) findViewById(R.id.bt_led_2);
+        btLed3 = (Button) findViewById(R.id.bt_led_3);
 
         btKeypad1 = (Button) findViewById(R.id.bt_keypad_1);
         btKeypad2 = (Button) findViewById(R.id.bt_keypad_2);
@@ -304,6 +323,8 @@ public class ControllerActivity extends AppCompatActivity implements View.OnClic
         btKeypad9.setOnClickListener(this);
 
         avController = (AnalogueView) findViewById(R.id.av_controller);
+
+        updatePacketData();
 
         mArrayAdapter = new ArrayAdapter<>(ControllerActivity.this, android.R.layout.select_dialog_item);
         mDialogBuilder = new AlertDialog.Builder(ControllerActivity.this);
@@ -342,8 +363,8 @@ public class ControllerActivity extends AppCompatActivity implements View.OnClic
         sbRed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                int data = progress + 600;
-                sendData(String.valueOf(data));
+                r = String.format("%3s", progress).replace(' ', '0');
+                updatePacketData();
             }
 
             @Override
@@ -360,8 +381,8 @@ public class ControllerActivity extends AppCompatActivity implements View.OnClic
         sbGreen.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                int data = progress + 700;
-                sendData(String.valueOf(data));
+                g = String.format("%3s", progress).replace(' ', '0');
+                updatePacketData();
             }
 
             @Override
@@ -378,8 +399,8 @@ public class ControllerActivity extends AppCompatActivity implements View.OnClic
         sbBlue.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                int data = progress + 800;
-                sendData(String.valueOf(data));
+                b = String.format("%3s", progress).replace(' ', '0');
+                updatePacketData();
             }
 
             @Override
@@ -393,38 +414,64 @@ public class ControllerActivity extends AppCompatActivity implements View.OnClic
             }
         });
 
-        btMode1.setOnClickListener(new View.OnClickListener() {
+        btLed1.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                sendData("401");
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    v.setBackgroundResource(R.drawable.selector_button_led);
+                    refreshManualSignAndData();
+                    isTouchDown[0] = false;
+                } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    v.setBackgroundResource(android.R.color.background_light);
+                    isTouchDown[0] = true;
+                }
+                return true;
             }
         });
 
-        btMode2.setOnClickListener(new View.OnClickListener() {
+        btLed2.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                sendData("402");
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    v.setBackgroundResource(R.drawable.selector_button_led);
+                    refreshManualSignAndData();
+                    isTouchDown[1] = false;
+                } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    v.setBackgroundResource(android.R.color.background_light);
+                    isTouchDown[1] = true;
+                }
+                return true;
             }
         });
 
-        btMode3.setOnClickListener(new View.OnClickListener() {
+        btLed3.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                sendData("403");
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    v.setBackgroundResource(R.drawable.selector_button_led);
+                    refreshManualSignAndData();
+                    isTouchDown[2] = false;
+                } else if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    v.setBackgroundResource(android.R.color.background_light);
+                    isTouchDown[2] = true;
+                }
+                return true;
             }
         });
 
         avController.setOnMoveListener(new AnalogueView.OnMoveListener() {
             @Override
             public void onCenter() {
-                // must-override method
+                x = "000";
+                y = "000";
+                updatePacketData();
             }
 
             @Override
-            public void onAnalogueMove(float X, float Y) {
-                /* int angle = (int) ((255 * (100 * polarAngle)) / 314);
-                angle *= -1;
-                sendData(String.valueOf(angle)); */
+            public void onAnalogueMove(int X, int Y) {
+                x = String.format("%3s", X).replace(' ', '0');
+                y = String.format("%3s", Y).replace(' ', '0');
+                updatePacketData();
             }
         });
     }

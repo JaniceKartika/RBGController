@@ -132,8 +132,8 @@ public class AnalogueView extends View {
         y = (float) p2nY(r, t);
 
         int range = w - 2 * smallCircleRadius;
-        float X = (MAX_VALUE * (x - smallCircleRadius)) / range;
-        float Y = (MAX_VALUE * (smallCircleRadius - y + range)) / range;
+        int X = (int) ((MAX_VALUE * (x - smallCircleRadius)) / range);
+        int Y = (int) ((MAX_VALUE * (smallCircleRadius - y + range)) / range);
 
         if (mMoveListener != null) {
             mMoveListener.onAnalogueMove(X, Y);
@@ -148,6 +148,6 @@ public class AnalogueView extends View {
     interface OnMoveListener {
         void onCenter();
 
-        void onAnalogueMove(float X, float Y);
+        void onAnalogueMove(int X, int Y);
     }
 }
