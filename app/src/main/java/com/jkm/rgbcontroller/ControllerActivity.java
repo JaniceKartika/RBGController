@@ -380,7 +380,7 @@ public class ControllerActivity extends AppCompatActivity implements View.OnClic
         sbRed.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                r = String.format("%3s", progress).replace(' ', '0');
+                r = String.format("%2s", progress).replace(' ', '0');
                 updatePacketData();
             }
 
@@ -398,7 +398,7 @@ public class ControllerActivity extends AppCompatActivity implements View.OnClic
         sbGreen.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                g = String.format("%3s", progress).replace(' ', '0');
+                g = String.format("%2s", progress).replace(' ', '0');
                 updatePacketData();
             }
 
@@ -416,7 +416,7 @@ public class ControllerActivity extends AppCompatActivity implements View.OnClic
         sbBlue.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                b = String.format("%3s", progress).replace(' ', '0');
+                b = String.format("%2s", progress).replace(' ', '0');
                 updatePacketData();
             }
 

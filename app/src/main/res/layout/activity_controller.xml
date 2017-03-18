@@ -42,7 +42,7 @@
                     android:id="@+id/sb_red"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:max="255"
+                    android:max="99"
                     android:progressTint="@color/softRedMaterial"
                     android:thumbTint="@color/redMaterial" />
             </LinearLayout>
@@ -64,7 +64,7 @@
                     android:id="@+id/sb_green"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:max="255"
+                    android:max="99"
                     android:progressTint="@color/softGreenMaterial"
                     android:thumbTint="@color/greenMaterial" />
             </LinearLayout>
@@ -85,7 +85,7 @@
                     android:id="@+id/sb_blue"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:max="255"
+                    android:max="99"
                     android:progressTint="@color/softBlueMaterial"
                     android:thumbTint="@color/blueMaterial" />
             </LinearLayout>
