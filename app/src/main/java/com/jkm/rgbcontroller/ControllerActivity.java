@@ -45,7 +45,7 @@ public class ControllerActivity extends AppCompatActivity implements View.OnClic
     private SeekBar sbRed, sbGreen, sbBlue;
     private Button btLed1, btLed2, btLed3;
     private Button btDimmer1, btDimmer2, btDimmer3;
-    private Button btKeypad1, btKeypad2, btKeypad3, btKeypad4, btKeypad5, btKeypad6, btKeypad7, btKeypad8, btKeypad9;
+    private Button btKeypad1, btKeypad2, btKeypad3, btKeypad4, btKeypad5, btKeypad6;
     private AnalogueView avController;
     private TextView tvData;
 
@@ -324,9 +324,6 @@ public class ControllerActivity extends AppCompatActivity implements View.OnClic
         btKeypad4 = (Button) findViewById(R.id.bt_keypad_4);
         btKeypad5 = (Button) findViewById(R.id.bt_keypad_5);
         btKeypad6 = (Button) findViewById(R.id.bt_keypad_6);
-        btKeypad7 = (Button) findViewById(R.id.bt_keypad_7);
-        btKeypad8 = (Button) findViewById(R.id.bt_keypad_8);
-        btKeypad9 = (Button) findViewById(R.id.bt_keypad_9);
 
         btKeypad1.setOnClickListener(this);
         btKeypad2.setOnClickListener(this);
@@ -334,9 +331,6 @@ public class ControllerActivity extends AppCompatActivity implements View.OnClic
         btKeypad4.setOnClickListener(this);
         btKeypad5.setOnClickListener(this);
         btKeypad6.setOnClickListener(this);
-        btKeypad7.setOnClickListener(this);
-        btKeypad8.setOnClickListener(this);
-        btKeypad9.setOnClickListener(this);
 
         avController = (AnalogueView) findViewById(R.id.av_controller);
         tvData = (TextView) findViewById(R.id.tv_data);

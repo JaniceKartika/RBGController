@@ -263,42 +263,6 @@
                 android:textSize="@dimen/font_large" />
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/layout_keypad_row_3"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/bt_keypad_7"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:tag="7"
-                android:text="@string/auto_7"
-                android:textSize="@dimen/font_large" />
-
-            <Button
-                android:id="@+id/bt_keypad_8"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:tag="8"
-                android:text="@string/auto_8"
-                android:textSize="@dimen/font_large" />
-
-            <Button
-                android:id="@+id/bt_keypad_9"
-                style="?android:attr/buttonBarButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:tag="9"
-                android:text="@string/auto_9"
-                android:textSize="@dimen/font_large" />
-        </LinearLayout>
-
         <TextView
             android:id="@+id/tv_data"
             android:layout_width="match_parent"

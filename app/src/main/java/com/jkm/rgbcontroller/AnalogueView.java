@@ -51,7 +51,7 @@ public class AnalogueView extends View {
         drawMyStuff(canvas);
         switch (toDo) {
             case 1:
-                center();
+                //center();
                 break;
             default:
                 break;
