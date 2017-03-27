@@ -47,7 +47,7 @@ public class ControllerActivity extends AppCompatActivity implements View.OnClic
     private Button btDimmer1, btDimmer2, btDimmer3;
     private Button btKeypad1, btKeypad2, btKeypad3, btKeypad4, btKeypad5, btKeypad6;
     private AnalogueView avController;
-    private TextView tvDataX, tvDataY, tvDataLed;
+    private TextView tvDataX, tvDataY, tvDataLed, tvSeekBarRed, tvSeekBarGreen, tvSeekBarBlue;
 
     private BluetoothAdapter mBluetoothAdapter;
     private HashMap<String, String> mDevices = new HashMap<>();
@@ -59,7 +59,7 @@ public class ControllerActivity extends AppCompatActivity implements View.OnClic
     private AlertDialog.Builder mDialogBuilder;
 
     private String x = "000", y = "000";
-    private String r = "000", g = "000", b = "000";
+    private String r = "00", g = "00", b = "00";
     private char[] mode = {'0', '0', '0'};
     private char dimmer = '0';
     private boolean[] isManual = {false, false, false};
@@ -226,10 +226,16 @@ public class ControllerActivity extends AppCompatActivity implements View.OnClic
         String showDataX = "x = " + x;
         String showDataY = "y = " + y;
         String showDataLed = "LED 1 = " + mode[0] + ", LED 2 = " + mode[1] + ", LED 3 = " + mode[2];
+        String showRedValue = "R (" + r + ")";
+        String showGreenValue = "G (" + g + ")";
+        String showBlueValue = "B (" + b + ")";
 
         tvDataX.setText(showDataX);
         tvDataY.setText(showDataY);
         tvDataLed.setText(showDataLed);
+        tvSeekBarRed.setText(showRedValue);
+        tvSeekBarGreen.setText(showGreenValue);
+        tvSeekBarBlue.setText(showBlueValue);
 
         String packet = START_BIT + x + y + r + g + b + mode[0] + mode[1] + mode[2] + dimmer + STOP_BIT;
         sendData(packet);
@@ -342,6 +348,9 @@ public class ControllerActivity extends AppCompatActivity implements View.OnClic
         tvDataX = (TextView) findViewById(R.id.tv_data_analogue_x);
         tvDataY = (TextView) findViewById(R.id.tv_data_analogue_y);
         tvDataLed = (TextView) findViewById(R.id.tv_data_led);
+        tvSeekBarRed = (TextView) findViewById(R.id.tv_seek_bar_red);
+        tvSeekBarGreen = (TextView) findViewById(R.id.tv_seek_bar_green);
+        tvSeekBarBlue = (TextView) findViewById(R.id.tv_seek_bar_blue);
 
         updatePacketData();
 
