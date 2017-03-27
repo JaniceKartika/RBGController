@@ -16,6 +16,114 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <com.jkm.rgbcontroller.AnalogueView
+            android:id="@+id/av_controller"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginBottom="40dp"
+            android:layout_marginEnd="@dimen/activity_horizontal_margin"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:layout_marginTop="@dimen/activity_vertical_margin" />
+
+        <LinearLayout
+            android:id="@+id/layout_led"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/bt_led_1"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/button_height"
+                android:layout_margin="8dp"
+                android:background="@drawable/selector_button"
+                android:minWidth="@dimen/button_min_width"
+                android:paddingEnd="8dp"
+                android:paddingStart="8dp"
+                android:text="@string/led_1"
+                android:textColor="@color/colorAccent" />
+
+            <Button
+                android:id="@+id/bt_led_2"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/button_height"
+                android:layout_margin="8dp"
+                android:background="@drawable/selector_button"
+                android:minWidth="@dimen/button_min_width"
+                android:paddingEnd="8dp"
+                android:paddingStart="8dp"
+                android:text="@string/led_2"
+                android:textColor="@color/colorAccent" />
+
+            <Button
+                android:id="@+id/bt_led_3"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/button_height"
+                android:layout_margin="8dp"
+                android:background="@drawable/selector_button"
+                android:minWidth="@dimen/button_min_width"
+                android:paddingEnd="8dp"
+                android:paddingStart="8dp"
+                android:text="@string/led_3"
+                android:textColor="@color/colorAccent" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_dimmer"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/bt_dimmer_1"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/button_height"
+                android:layout_margin="8dp"
+                android:background="@drawable/selector_button"
+                android:minWidth="@dimen/button_min_width"
+                android:paddingEnd="8dp"
+                android:paddingStart="8dp"
+                android:text="@string/dimmer_1"
+                android:textColor="@color/colorAccent" />
+
+            <Button
+                android:id="@+id/bt_dimmer_2"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/button_height"
+                android:layout_margin="8dp"
+                android:background="@drawable/selector_button"
+                android:minWidth="@dimen/button_min_width"
+                android:paddingEnd="8dp"
+                android:paddingStart="8dp"
+                android:text="@string/dimmer_2"
+                android:textColor="@color/colorAccent" />
+
+            <Button
+                android:id="@+id/bt_dimmer_3"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/button_height"
+                android:layout_margin="8dp"
+                android:background="@drawable/selector_button"
+                android:minWidth="@dimen/button_min_width"
+                android:paddingEnd="8dp"
+                android:paddingStart="8dp"
+                android:text="@string/dimmer_3"
+                android:textColor="@color/colorAccent" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_right"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
         android:orientation="vertical">
 
         <LinearLayout
@@ -90,106 +198,6 @@
                     android:thumbTint="@color/blueMaterial" />
             </LinearLayout>
         </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/layout_analogue_and_mode"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <com.jkm.rgbcontroller.AnalogueView
-                android:id="@+id/av_controller"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:layout_margin="@dimen/activity_vertical_margin" />
-
-            <LinearLayout
-                android:id="@+id/layout_mode"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
-
-                <Button
-                    android:id="@+id/bt_led_1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_margin="4dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/selector_button"
-                    android:text="@string/led_1"
-                    android:textColor="@color/colorAccent" />
-
-                <Button
-                    android:id="@+id/bt_led_2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_margin="4dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/selector_button"
-                    android:text="@string/led_2"
-                    android:textColor="@color/colorAccent" />
-
-                <Button
-                    android:id="@+id/bt_led_3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_margin="4dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/selector_button"
-                    android:text="@string/led_3"
-                    android:textColor="@color/colorAccent" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layout_dimmer"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
-
-                <Button
-                    android:id="@+id/bt_dimmer_1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_margin="4dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/selector_button"
-                    android:text="@string/dimmer_1"
-                    android:textColor="@color/colorAccent" />
-
-                <Button
-                    android:id="@+id/bt_dimmer_2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_margin="4dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/selector_button"
-                    android:text="@string/dimmer_2"
-                    android:textColor="@color/colorAccent" />
-
-                <Button
-                    android:id="@+id/bt_dimmer_3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_margin="4dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/selector_button"
-                    android:text="@string/dimmer_3"
-                    android:textColor="@color/colorAccent" />
-            </LinearLayout>
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/layout_keypad"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/layout_keypad_row_1"
