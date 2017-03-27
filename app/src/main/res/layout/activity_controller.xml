@@ -19,14 +19,43 @@
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
-        <com.jkm.rgbcontroller.AnalogueView
-            android:id="@+id/av_controller"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_marginBottom="40dp"
-            android:layout_marginEnd="@dimen/activity_horizontal_margin"
-            android:layout_marginStart="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="@dimen/activity_vertical_margin" />
+        <RelativeLayout
+            android:id="@+id/layout_analogue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.jkm.rgbcontroller.AnalogueView
+                android:id="@+id/av_controller"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginBottom="40dp"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="40dp"
+                android:layout_marginTop="@dimen/activity_vertical_margin" />
+
+            <TextView
+                android:id="@+id/tv_data_analogue_x"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_toEndOf="@id/av_controller"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/font_normal" />
+
+            <TextView
+                android:id="@+id/tv_data_analogue_y"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tv_data_analogue_x"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:layout_toEndOf="@id/av_controller"
+                android:textColor="@color/colorAccent"
+                android:textSize="@dimen/font_normal" />
+        </RelativeLayout>
 
         <LinearLayout
             android:id="@+id/layout_led"
@@ -272,7 +301,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/tv_data"
+            android:id="@+id/tv_data_led"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
