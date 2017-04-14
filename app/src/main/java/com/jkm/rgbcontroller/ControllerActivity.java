@@ -266,7 +266,7 @@ public class ControllerActivity extends AppCompatActivity implements View.OnClic
             clearManualFlag();
             isManual[manualIndex] = true;
             for (int i = 0; i < mode.length; i++) {
-                if (mode[i] == 'm') mode[i] = '0';
+                if (mode[i] == 'm') mode[i] = '1';
             }
             mode[manualIndex] = 'm';
             updatePacketData();
